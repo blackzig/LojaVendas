@@ -18,7 +18,8 @@ public class Start {
             //MetalLookAndFeel
             String name = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
             javax.swing.UIManager.setLookAndFeel(name);
-            LoginView lv = new LoginView();
+            // LoginView lv = new LoginView();
+            PrincipalView lv = new PrincipalView();
             lv.setVisible(true);
         } catch (ClassNotFoundException | IllegalAccessException
                 | InstantiationException | UnsupportedLookAndFeelException e) {

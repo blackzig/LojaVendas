@@ -64,3 +64,29 @@ create table tipo_usuario(
 	id_usuario varchar(255) not null,
 	foreign key(id_usuario) references usuario(id)
 );
+
+ALTER TABLE `usuario` ADD `status` BOOLEAN NOT NULL AFTER `senha`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

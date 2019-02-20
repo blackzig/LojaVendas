@@ -36,6 +36,7 @@ public class PrincipalView extends javax.swing.JFrame {
         JMICliente = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         JMIVenda = new javax.swing.JMenuItem();
+        JMIUsuario = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Loja de Vendas");
@@ -71,6 +72,14 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         jMenu2.add(JMIVenda);
 
+        JMIUsuario.setText("Usuário");
+        JMIUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JMIUsuarioActionPerformed(evt);
+            }
+        });
+        jMenu2.add(JMIUsuario);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -83,7 +92,7 @@ public class PrincipalView extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
+            .addGap(0, 586, Short.MAX_VALUE)
         );
 
         pack();
@@ -115,6 +124,15 @@ public class PrincipalView extends javax.swing.JFrame {
         desktop.add(cv);
         JMIVenda.setEnabled(false);
     }//GEN-LAST:event_JMIVendaActionPerformed
+
+    private void JMIUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMIUsuarioActionPerformed
+        setContentPane(desktop);
+        UsuarioView cv = new UsuarioView(JMIUsuario);
+        
+        cv.setVisible(true);
+        desktop.add(cv);
+        JMIUsuario.setEnabled(false);
+    }//GEN-LAST:event_JMIUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,6 +173,7 @@ public class PrincipalView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem JMICategoriaProduto;
     private javax.swing.JMenuItem JMICliente;
+    private javax.swing.JMenuItem JMIUsuario;
     private javax.swing.JMenuItem JMIVenda;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
