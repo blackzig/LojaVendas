@@ -17,6 +17,12 @@ import java.util.List;
  */
 public class TipoUsuarioController {
 
+    public List<TipoUsuario> listaDeUsuarios(String busca) {
+        TipoUsuarioDAO tudao = new TipoUsuarioDAO();
+        List<TipoUsuario> lista = tudao.listaDeUsuarios(busca);
+        return lista;
+    }
+
     public List<String> listaTipoUsuario() {
         TipoUsuarioDAO tudao = new TipoUsuarioDAO();
         List<String> lista = tudao.listaTipoUsuario();
@@ -34,7 +40,7 @@ public class TipoUsuarioController {
 
         TipoUsuarioDAO tudao = new TipoUsuarioDAO();
         String msg = tudao.salvar(tu);
-        
+
         return msg;
     }
 

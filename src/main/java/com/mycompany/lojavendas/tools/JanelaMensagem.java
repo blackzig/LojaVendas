@@ -13,6 +13,11 @@ import javax.swing.JOptionPane;
  */
 public class JanelaMensagem {
 
+    public static void nadaNaLista() {
+        JOptionPane.showMessageDialog(null, "Nenhum dado encontrado.",
+                "Aviso", 1);
+    }
+
     public static void verificarMensagem(String msg) {
         if (msg.equalsIgnoreCase("OK")) {
             JOptionPane.showMessageDialog(null, "Dados cadastrados com sucesso.",

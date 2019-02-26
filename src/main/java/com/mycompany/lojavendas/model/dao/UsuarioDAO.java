@@ -6,11 +6,15 @@
 package com.mycompany.lojavendas.model.dao;
 
 import com.mycompany.lojavendas.conf.Conexao;
+import com.mycompany.lojavendas.model.TipoUsuario;
 import com.mycompany.lojavendas.model.Usuario;
 import com.mycompany.lojavendas.tools.TratamentoConexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

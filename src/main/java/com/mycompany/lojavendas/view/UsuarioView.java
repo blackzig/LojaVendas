@@ -7,9 +7,14 @@ package com.mycompany.lojavendas.view;
 
 import com.mycompany.lojavendas.controller.TipoUsuarioController;
 import com.mycompany.lojavendas.controller.UsuarioController;
+import com.mycompany.lojavendas.model.TipoUsuario;
 import com.mycompany.lojavendas.model.Usuario;
+import com.mycompany.lojavendas.tools.JanelaMensagem;
+import com.mycompany.lojavendas.tools.TableCellRendererColor;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JMenuItem;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -26,6 +31,10 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         BGAtivoInativo.add(JCBInativo);
 
         carregarListaTipoUsuario();
+
+        JTable.getTableHeader().setReorderingAllowed(false);
+        JTable.setAutoCreateRowSorter(true);
+        JTable.setDefaultRenderer(Object.class, new TableCellRendererColor());
     }
 
     /**
@@ -93,22 +102,29 @@ public class UsuarioView extends javax.swing.JInternalFrame {
             }
         });
 
+        JTFPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                JTFPesquisaKeyPressed(evt);
+            }
+        });
+
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setText("Login");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Senha");
 
+        JTable.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         JTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Login", "Tipo Usuário"
+                "ID", "Login", "Tipo Usuário", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -201,8 +217,44 @@ public class UsuarioView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_JBSalvarActionPerformed
 
     private void JBBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBBuscarActionPerformed
-        
+        String busca = JTFPesquisa.getText();
+        TipoUsuarioController tuc = new TipoUsuarioController();
+        List<TipoUsuario> lista = tuc.listaDeUsuarios(busca);
+        carregarTabela(lista);
     }//GEN-LAST:event_JBBuscarActionPerformed
+
+    private void JTFPesquisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JTFPesquisaKeyPressed
+       if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+           JBBuscarActionPerformed(null);
+       }
+    }//GEN-LAST:event_JTFPesquisaKeyPressed
+
+    private void carregarTabela(List<TipoUsuario> lista) {
+        DefaultTableModel modelo = (DefaultTableModel) JTable.getModel();
+        JTable.getColumnModel().getColumn(0).setMinWidth(0);
+        JTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        modelo.setRowCount(0);
+
+        if (lista.isEmpty()) {
+            JanelaMensagem.nadaNaLista();
+        } else {
+            for (int i = 0; i < lista.size(); i++) {
+                String status;
+                if (lista.get(i).getUsuario().isStatus() == true) {
+                    status = "Ativo";
+                } else {
+                    status = "Inativo";
+                }
+
+                modelo.addRow(new Object[]{
+                    lista.get(i).getUsuario().getId(),
+                    lista.get(i).getUsuario().getLogin(),
+                    lista.get(i).getNome(),
+                    status
+                });
+            }
+        }
+    }
 
     private void carregarListaTipoUsuario() {
         TipoUsuarioController tuc = new TipoUsuarioController();
