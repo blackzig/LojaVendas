@@ -19,6 +19,10 @@ import java.util.List;
 /**
  *
  * @author Michel
+ * Create   gravar dados
+ * Read     pesquisar dados 
+ * Update   atualizar dados
+ * Delete   remove dados
  */
 public class TipoUsuarioDAO {
 
@@ -26,6 +30,94 @@ public class TipoUsuarioDAO {
 
     public TipoUsuarioDAO() {
         con = Conexao.conectar();
+    }
+
+    public TipoUsuario usuarioTemEsseTipoUsuario(Usuario usuario,
+            String tipoUsuario) {
+        TipoUsuario tipo = null;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * FROM tipo_usuario "
+                    + "where nome = ? and id_usuario = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, tipoUsuario);
+            ps.setString(2, usuario.getId());
+            rs = ps.executeQuery();
+
+            TipoUsuario t = new TipoUsuario();
+            while (rs.next()) {
+                String id = rs.getString("id");
+                String tu = rs.getString("nome");
+                String idUsuario = rs.getString("id_usuario");
+
+                Usuario u = new Usuario();
+                u.setId(idUsuario);
+
+                t.setId(id);
+                t.setNome(tu);
+                t.setUsuario(u);
+            }
+            return t;
+        } catch (SQLException e) {
+            System.out.println("ERRO usuarioTemEsseTipoUsuario "
+                    + e.getMessage());
+        } finally {
+            TratamentoConexao.fecharConexaoEResultSet(con, rs);
+        }
+
+        return tipo;
+    }
+
+    public void remover(String id) {
+        try {
+            String sql = "DELETE FROM tipo_usuario where id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.execute();
+        } catch (SQLException e) {
+            System.out.println("Erro remover tipo usuario "
+                    + e.getMessage());
+        } finally {
+            TratamentoConexao.fecharConexao(con);
+        }
+    }
+
+    public TipoUsuario idTipoUsuario(TipoUsuario tu) {
+        TipoUsuario tipo = new TipoUsuario();
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * FROM `usuario` u "
+                    + "INNER JOIN tipo_usuario tu ON "
+                    + "u.id = tu.id_usuario "
+                    + "WHERE u.login = ? AND tu.nome = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, tu.getUsuario().getLogin());
+            ps.setString(2, tu.getNome());
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String idUsuario = rs.getString("id");
+                String login = rs.getString("login");
+                boolean status = rs.getBoolean("status");
+                String idTipoUsuario = rs.getString(5);
+                String tipoUsuario = rs.getString("nome");
+
+                Usuario u = new Usuario();
+                u.setId(idUsuario);
+                u.setLogin(login);
+                u.setStatus(status);
+
+                tipo.setId(idTipoUsuario);
+                tipo.setNome(tipoUsuario);
+                tipo.setUsuario(u);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ERRO idTipoUsuario " + e.getMessage());
+        } finally {
+            TratamentoConexao.fecharConexaoEResultSet(con, rs);
+        }
+        return tipo;
     }
 
     public List<TipoUsuario> listaDeUsuarios(String busca) {

@@ -24,6 +24,9 @@ public class UsuarioView extends javax.swing.JInternalFrame {
 
     JMenuItem menuUsuario;
 
+    int editando = 0;
+    String idUsuario;
+
     public UsuarioView(JMenuItem menuUsuario) {
         initComponents();
         this.menuUsuario = menuUsuario;
@@ -60,6 +63,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         JTable = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
+        JBRefresh = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -84,10 +88,13 @@ public class UsuarioView extends javax.swing.JInternalFrame {
 
         JTFLogin.setNextFocusableComponent(JPFSenha);
 
+        JCBAtivo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         JCBAtivo.setText("Ativo");
 
+        JCBInativo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         JCBInativo.setText("Inativo");
 
+        JBSalvar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         JBSalvar.setText("Salvar");
         JBSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,15 +127,20 @@ public class UsuarioView extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "Login", "Tipo Usuário", "Status"
+                "ID", "Login", "Tipo Usuário", "Status", "Excluir"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        JTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JTableMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(JTable);
@@ -136,25 +148,50 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Tipo de Usuário");
 
+        JBRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/refresh.png"))); // NOI18N
+        JBRefresh.setToolTipText("Recarregar tipos de usuários");
+        JBRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBRefreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(JPFSenha, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(JTFLogin, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel3)
-                    .addComponent(JBSalvar)
-                    .addComponent(jLabel5)
-                    .addComponent(JCTipoUsuario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(JCBAtivo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                        .addComponent(JCBInativo)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addComponent(JBRefresh))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(JCTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(JCBAtivo)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(JCBInativo))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(JBSalvar)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(JPFSenha, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                                    .addComponent(JTFLogin, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(jLabel5)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(JBBuscar)
@@ -172,7 +209,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(JTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JBBuscar))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -182,18 +219,20 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(JPFSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JCTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(JBRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(JCTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(JCBAtivo)
                             .addComponent(JCBInativo))
-                        .addGap(21, 21, 21)
+                        .addGap(18, 18, 18)
                         .addComponent(JBSalvar)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         pack();
@@ -208,12 +247,29 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         String senha = new String(JPFSenha.getPassword());
         String tipoUsuario = JCTipoUsuario.getSelectedItem().toString();
 
-        Usuario u = new Usuario();
-        u.setLogin(login);
-        u.setSenha(senha);
+        if (login.equalsIgnoreCase("") || senha.equalsIgnoreCase("")) {
+           JanelaMensagem.preecherTodosOsCampos();
+        } else {
+            Usuario u = new Usuario();
+            u.setLogin(login);
+            u.setSenha(senha);
 
-        UsuarioController uc = new UsuarioController();
-        uc.salvar(u, tipoUsuario);
+            UsuarioController uc = new UsuarioController();
+
+            if (editando == 0) {
+                uc.salvar(u, tipoUsuario);
+            } else {
+                if (JCBAtivo.isSelected()) {
+                    u.setStatus(true);
+                } else {
+                    u.setStatus(false);
+                }
+                u.setId(idUsuario);
+                uc.atualizar(u, tipoUsuario);
+            }
+            JTFPesquisa.setText(login);
+            JBBuscarActionPerformed(null);
+        }
     }//GEN-LAST:event_JBSalvarActionPerformed
 
     private void JBBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBBuscarActionPerformed
@@ -224,10 +280,51 @@ public class UsuarioView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_JBBuscarActionPerformed
 
     private void JTFPesquisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JTFPesquisaKeyPressed
-       if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-           JBBuscarActionPerformed(null);
-       }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            JBBuscarActionPerformed(null);
+        }
     }//GEN-LAST:event_JTFPesquisaKeyPressed
+
+    private void JTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableMouseClicked
+        editando = 1;
+        int linha = JTable.getSelectedRow();
+        int coluna = JTable.getSelectedColumn();
+        idUsuario = (String) JTable.getValueAt(linha, 0);
+        String login = (String) JTable.getValueAt(linha, 1);
+        String tipoUsuario = (String) JTable.getValueAt(linha, 2);
+        String status = (String) JTable.getValueAt(linha, 3);
+
+        JTFLogin.setText(login);
+        JCTipoUsuario.removeAllItems();
+        JCTipoUsuario.addItem(tipoUsuario);
+
+        if (status.equalsIgnoreCase("Ativo")) {
+            JCBAtivo.doClick();
+        } else {
+            JCBInativo.doClick();
+        }
+
+        if (coluna == 4) {
+            Usuario u = new Usuario();
+            u.setLogin(login);
+
+            TipoUsuario tu = new TipoUsuario();
+            tu.setNome(tipoUsuario);
+            tu.setUsuario(u);
+
+            TipoUsuarioController tc = new TipoUsuarioController();
+            TipoUsuario tipo = tc.idTipoUsuario(tu);
+            int itsOK = tc.remover(tipo.getId());
+            if (itsOK == 0) {
+                JBBuscarActionPerformed(null);
+            }
+        }
+    }//GEN-LAST:event_JTableMouseClicked
+
+    private void JBRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBRefreshActionPerformed
+        JCTipoUsuario.removeAllItems();
+        carregarListaTipoUsuario();
+    }//GEN-LAST:event_JBRefreshActionPerformed
 
     private void carregarTabela(List<TipoUsuario> lista) {
         DefaultTableModel modelo = (DefaultTableModel) JTable.getModel();
@@ -250,8 +347,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                     lista.get(i).getUsuario().getId(),
                     lista.get(i).getUsuario().getLogin(),
                     lista.get(i).getNome(),
-                    status
-                });
+                    status, "REMOVER"});
             }
         }
     }
@@ -268,6 +364,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BGAtivoInativo;
     private javax.swing.JButton JBBuscar;
+    private javax.swing.JButton JBRefresh;
     private javax.swing.JButton JBSalvar;
     private javax.swing.JCheckBox JCBAtivo;
     private javax.swing.JCheckBox JCBInativo;

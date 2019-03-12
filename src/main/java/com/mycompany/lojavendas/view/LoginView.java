@@ -88,6 +88,10 @@ public class LoginView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String usuario = JTFUsuario.getText();
+        String senha = new String(JPFSenha.getPassword());
+        
+        
         PrincipalView pv = new PrincipalView();
         pv.setVisible(true);
         dispose();

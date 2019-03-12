@@ -6,15 +6,11 @@
 package com.mycompany.lojavendas.model.dao;
 
 import com.mycompany.lojavendas.conf.Conexao;
-import com.mycompany.lojavendas.model.TipoUsuario;
 import com.mycompany.lojavendas.model.Usuario;
 import com.mycompany.lojavendas.tools.TratamentoConexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -26,6 +22,27 @@ public class UsuarioDAO {
 
     public UsuarioDAO() {
         con = Conexao.conectar();
+    }
+
+    public String atualizar(Usuario usuario) {
+        String msg = null;
+        try {
+            String sql = "UPDATE usuario "
+                    + "SET login=?, senha=sha2(?, 256), status=? "
+                    + "Where id=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, usuario.getLogin());
+            ps.setString(2, usuario.getSenha());
+            ps.setBoolean(3, usuario.isStatus());
+            ps.setString(4, usuario.getId());
+            ps.execute();
+            return msg = "OK";
+        } catch (SQLException e) {
+            System.out.println("ERRO atualizar usuário " + e.getMessage());
+        } finally {
+            TratamentoConexao.fecharConexao(con);
+        }
+        return msg;
     }
 
     public String salvar(Usuario usuario) {

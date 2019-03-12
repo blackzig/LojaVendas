@@ -9,6 +9,7 @@ import com.mycompany.lojavendas.model.TipoUsuario;
 import com.mycompany.lojavendas.model.Usuario;
 import com.mycompany.lojavendas.model.dao.TipoUsuarioDAO;
 import com.mycompany.lojavendas.tools.GerarUUID;
+import com.mycompany.lojavendas.tools.JanelaMensagem;
 import java.util.List;
 
 /**
@@ -16,6 +17,29 @@ import java.util.List;
  * @author Michel
  */
 public class TipoUsuarioController {
+
+    public TipoUsuario usuarioPossuiEsseTipoUsuario(Usuario usuario,
+            String tipoUsuario) {
+        TipoUsuarioDAO tdao = new TipoUsuarioDAO();
+        TipoUsuario tipo = tdao.usuarioTemEsseTipoUsuario(usuario,
+                tipoUsuario);
+        return tipo;
+    }
+
+    public int remover(String id) {
+        int itsOK = JanelaMensagem.mensagemDeRemocao();
+        if (itsOK == 0) {
+            TipoUsuarioDAO tudao = new TipoUsuarioDAO();
+            tudao.remover(id);
+        }
+        return itsOK;
+    }
+
+    public TipoUsuario idTipoUsuario(TipoUsuario tu) {
+        TipoUsuarioDAO tudao = new TipoUsuarioDAO();
+        TipoUsuario tipo = tudao.idTipoUsuario(tu);
+        return tipo;
+    }
 
     public List<TipoUsuario> listaDeUsuarios(String busca) {
         TipoUsuarioDAO tudao = new TipoUsuarioDAO();

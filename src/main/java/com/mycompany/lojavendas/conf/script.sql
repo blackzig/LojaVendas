@@ -68,7 +68,9 @@ create table tipo_usuario(
 ALTER TABLE `usuario` ADD `status` BOOLEAN NOT NULL AFTER `senha`;
 
 
-
+INSERT INTO `tipo_usuario` (`id`, `nome`, `id_usuario`) 
+VALUES ('a5bb4550-47cf-40b6-b49a-e104af41681b', 'TI', 
+'f7021729-d48e-4632-a678-2d9832b924d8');
 
 
 

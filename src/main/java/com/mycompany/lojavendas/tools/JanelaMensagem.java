@@ -18,6 +18,12 @@ public class JanelaMensagem {
                 "Aviso", 1);
     }
 
+    public static void preecherTodosOsCampos() {
+        JOptionPane.showMessageDialog(null, "Todos os campos devem "
+                + "ser preenchidos.",
+                "Aviso", 1);
+    }
+
     public static void verificarMensagem(String msg) {
         if (msg.equalsIgnoreCase("OK")) {
             JOptionPane.showMessageDialog(null, "Dados cadastrados com sucesso.",
@@ -36,6 +42,15 @@ public class JanelaMensagem {
     public static void mensagemFalha() {
         JOptionPane.showMessageDialog(null, "Erro ao acessar o banco.",
                 "Aviso", 0);
+    }
+
+    public static int mensagemDeRemocao() {
+        Object[] options = {"Sim", "Não"};
+        int opcao = JOptionPane.showOptionDialog(null,
+                "Tem certeza que deseja remover esse registro",
+                "Atenção!!!", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        return opcao;
     }
 
 }

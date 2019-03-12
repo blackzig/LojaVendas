@@ -5,8 +5,11 @@
  */
 package com.mycompany.lojavendas.tools;
 
+import com.mycompany.lojavendas.view.Start;
 import java.awt.Color;
 import java.awt.Component;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -22,8 +25,18 @@ public class TableCellRendererColor extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
-        componente = (JLabel) super.getTableCellRendererComponent(table, value,
-                isSelected, hasFocus, row, column);
+        componente = (JLabel) super.getTableCellRendererComponent(
+                table, value, isSelected, hasFocus, row, column);
+        componente.setHorizontalAlignment(CENTER);
+
+//        if (column == 4) {
+//            setIcon(new ImageIcon(
+//                    getClass().getResource("/imagem/fogo.png")));
+//        } else {
+//            setIcon(new ImageIcon(
+//                    getClass().getResource("")));
+//        }
+
         componente.setForeground(Color.white);
         if (row % 2 == 0) {
             componente.setBackground(Color.BLACK);
