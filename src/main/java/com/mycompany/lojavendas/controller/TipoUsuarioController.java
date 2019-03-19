@@ -68,4 +68,18 @@ public class TipoUsuarioController {
         return msg;
     }
 
+    public String atualizarTipoUsuario(String idUsuario, String tipoUsuario) {
+        Usuario u = new Usuario();
+        u.setId(idUsuario);
+
+        TipoUsuario tu = new TipoUsuario();
+        tu.setNome(tipoUsuario);
+        tu.setUsuario(u);
+
+        TipoUsuarioDAO tudao = new TipoUsuarioDAO();
+        String msg = tudao.atualizar(tu);
+
+        return msg;
+    }
+
 }

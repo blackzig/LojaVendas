@@ -37,6 +37,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         JMIVenda = new javax.swing.JMenuItem();
         JMIUsuario = new javax.swing.JMenuItem();
+        JMSair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Loja de Vendas");
@@ -82,6 +83,14 @@ public class PrincipalView extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        JMSair.setText("Sair");
+        JMSair.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JMSairMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(JMSair);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -101,7 +110,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private void JMICategoriaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMICategoriaProdutoActionPerformed
         setContentPane(desktop);
         CategoriaProdutoView cpv = new CategoriaProdutoView(JMICategoriaProduto);
-      
+
         cpv.setVisible(true);
         desktop.add(cpv);
         JMICategoriaProduto.setEnabled(false);
@@ -110,7 +119,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private void JMIClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMIClienteActionPerformed
         setContentPane(desktop);
         ClienteView cv = new ClienteView(JMICliente);
-        
+
         cv.setVisible(true);
         desktop.add(cv);
         JMICliente.setEnabled(false);
@@ -119,7 +128,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private void JMIVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMIVendaActionPerformed
         setContentPane(desktop);
         VendaView cv = new VendaView(JMIVenda);
-        
+
         cv.setVisible(true);
         desktop.add(cv);
         JMIVenda.setEnabled(false);
@@ -128,11 +137,17 @@ public class PrincipalView extends javax.swing.JFrame {
     private void JMIUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMIUsuarioActionPerformed
         setContentPane(desktop);
         UsuarioView cv = new UsuarioView(JMIUsuario);
-        
+
         cv.setVisible(true);
         desktop.add(cv);
         JMIUsuario.setEnabled(false);
     }//GEN-LAST:event_JMIUsuarioActionPerformed
+
+    private void JMSairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JMSairMouseClicked
+        LoginView lv = new LoginView();
+        lv.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_JMSairMouseClicked
 
     /**
      * @param args the command line arguments
@@ -175,6 +190,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem JMICliente;
     private javax.swing.JMenuItem JMIUsuario;
     private javax.swing.JMenuItem JMIVenda;
+    private javax.swing.JMenu JMSair;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

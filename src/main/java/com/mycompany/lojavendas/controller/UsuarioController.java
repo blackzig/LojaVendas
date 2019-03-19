@@ -31,7 +31,9 @@ public class UsuarioController {
         TipoUsuario tipo = tuc
                 .usuarioPossuiEsseTipoUsuario(usuario, tipoUsuario);
         if (tipo.getId() == null) {
-            mesagem = gravarTipoUsuario(msg, usuario.getId(), tipoUsuario);
+            //válido para quando o sistema permitir mais de um tipo de usuário
+            //mesagem = gravarTipoUsuario(msg, usuario.getId(), tipoUsuario);
+            mesagem = atualizarTipoUsuario(msg, usuario.getId(), tipoUsuario);
         }
         return mesagem;
     }
@@ -45,14 +47,26 @@ public class UsuarioController {
         return finalMsg;
     }
 
+    //válido para quando o sistema permitir mais de um tipo de usuário
     private String gravarTipoUsuario(String msg, String id,
             String tipoUsuario) {
         String msgTU = null;
-                System.out.println("msg "+msg);
         if (msg.equalsIgnoreCase("OK")) {
-            System.out.println("id "+id);
             TipoUsuarioController tuc = new TipoUsuarioController();
             msgTU = tuc.salvarTipoUsuario(id, tipoUsuario);
+            JanelaMensagem.verificarMensagem(msgTU);
+        } else {
+            JanelaMensagem.mensagemFalha();
+        }
+        return msgTU;
+    }
+
+    private String atualizarTipoUsuario(String msg, String id,
+            String tipoUsuario) {
+        String msgTU = null;
+        if (msg.equalsIgnoreCase("OK")) {
+            TipoUsuarioController tuc = new TipoUsuarioController();
+            msgTU = tuc.atualizarTipoUsuario(id, tipoUsuario);
             JanelaMensagem.verificarMensagem(msgTU);
         } else {
             JanelaMensagem.mensagemFalha();

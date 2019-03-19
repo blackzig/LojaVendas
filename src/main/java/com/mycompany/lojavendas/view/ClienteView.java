@@ -5,6 +5,7 @@
  */
 package com.mycompany.lojavendas.view;
 
+import com.mycompany.lojavendas.tools.TrabalhandoComImagens;
 import javax.swing.JMenuItem;
 
 /**
@@ -12,12 +13,14 @@ import javax.swing.JMenuItem;
  * @author Michel
  */
 public class ClienteView extends javax.swing.JInternalFrame {
-    
+
     JMenuItem menuCliente;
-    
+
     public ClienteView(JMenuItem menuCliente) {
         initComponents();
         this.menuCliente = menuCliente;
+
+        imagemPadraoCliente();
     }
 
     /**
@@ -169,6 +172,10 @@ public class ClienteView extends javax.swing.JInternalFrame {
         menuCliente.setEnabled(true);
     }//GEN-LAST:event_formInternalFrameClosing
 
+    private void imagemPadraoCliente() {
+        TrabalhandoComImagens tci = new TrabalhandoComImagens();
+        JLFoto.setIcon(tci.imagemPadrao());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JBBusca;

@@ -5,6 +5,13 @@
  */
 package com.mycompany.lojavendas.view;
 
+import com.mycompany.lojavendas.conf.Estatico;
+import com.mycompany.lojavendas.controller.LoginController;
+import com.mycompany.lojavendas.model.StatusLogin;
+import com.mycompany.lojavendas.model.TipoUsuario;
+import com.mycompany.lojavendas.model.Usuario;
+import java.awt.event.KeyEvent;
+
 /**
  *
  * @author Michel
@@ -31,7 +38,7 @@ public class LoginView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         JTFUsuario = new javax.swing.JTextField();
         JPFSenha = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        JBEntrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Loja de Vendas");
@@ -43,11 +50,17 @@ public class LoginView extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Senha");
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setText("ENTRAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        JPFSenha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                JPFSenhaKeyPressed(evt);
+            }
+        });
+
+        JBEntrar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        JBEntrar.setText("ENTRAR");
+        JBEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                JBEntrarActionPerformed(evt);
             }
         });
 
@@ -64,7 +77,7 @@ public class LoginView extends javax.swing.JFrame {
                     .addComponent(JPFSenha, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(71, 71, 71)
-                        .addComponent(jButton1)))
+                        .addComponent(JBEntrar)))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -79,7 +92,7 @@ public class LoginView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(JPFSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(JBEntrar)
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
@@ -87,15 +100,30 @@ public class LoginView extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void JBEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBEntrarActionPerformed
         String usuario = JTFUsuario.getText();
         String senha = new String(JPFSenha.getPassword());
         
+        Usuario u = new Usuario();
+        u.setLogin(usuario);
+        u.setSenha(senha);
+        TipoUsuario tipo = LoginController.login(u);
+        if (tipo.getId() != null) {
+            Estatico.setTipoUsuario(tipo.getNome());
+            Estatico.setLogin(tipo.getUsuario().getLogin());
+            PrincipalView pv = new PrincipalView();
+            pv.setVisible(true);
+            dispose();
+        }
         
-        PrincipalView pv = new PrincipalView();
-        pv.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+
+    }//GEN-LAST:event_JBEntrarActionPerformed
+
+    private void JPFSenhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JPFSenhaKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            JBEntrarActionPerformed(null);
+        }
+    }//GEN-LAST:event_JPFSenhaKeyPressed
 
     /**
      * @param args the command line arguments
@@ -133,9 +161,9 @@ public class LoginView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JBEntrar;
     private javax.swing.JPasswordField JPFSenha;
     private javax.swing.JTextField JTFUsuario;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

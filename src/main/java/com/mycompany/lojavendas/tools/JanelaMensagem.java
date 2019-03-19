@@ -26,11 +26,11 @@ public class JanelaMensagem {
 
     public static void verificarMensagem(String msg) {
         if (msg.equalsIgnoreCase("OK")) {
-            JOptionPane.showMessageDialog(null, "Dados cadastrados com sucesso.",
+            JOptionPane.showMessageDialog(null,
+                    "Dados cadastrados com sucesso.",
                     "Aviso", 1);
         } else {
-            JOptionPane.showMessageDialog(null, "Erro ao acessar o banco.",
-                    "Aviso", 0);
+            mensagemFalha();
         }
     }
 
@@ -53,4 +53,29 @@ public class JanelaMensagem {
         return opcao;
     }
 
+    public static void loginVazio() {
+        JOptionPane.showMessageDialog(null,
+                "Preencha o campo usuário e senha.",
+                "Aviso", 1);
+    }
+
+    public static void loginErro() {
+        JOptionPane.showMessageDialog(null,
+                "Usuário ou senha estão errados.",
+                "Aviso", 1);
+    }
+
+    public static void naoRemoverTipoUsuario() {
+        JOptionPane.showMessageDialog(null,
+                "Não há a possibilidade de remover o tipo de usuário.\n "
+                + "Você pode inativar o usuário ou atualizar o "
+                + "tipo de usuário.",
+                "Aviso", 1);
+    }
+
+    public static void novoUsuario() {
+        JOptionPane.showMessageDialog(null,
+                "Pronto para inserir um novo usuário.",
+                "Aviso", 1);
+    }
 }

@@ -18,11 +18,8 @@ import java.util.List;
 
 /**
  *
- * @author Michel
- * Create   gravar dados
- * Read     pesquisar dados 
- * Update   atualizar dados
- * Delete   remove dados
+ * @author Michel Create gravar dados Read pesquisar dados Update atualizar
+ * dados Delete remove dados
  */
 public class TipoUsuarioDAO {
 
@@ -199,6 +196,24 @@ public class TipoUsuarioDAO {
             return msg = "OK";
         } catch (SQLException e) {
             System.out.println("ERRO salvar tu " + e.getMessage());
+        } finally {
+            TratamentoConexao.fecharConexao(con);
+        }
+        return msg;
+    }
+
+    public String atualizar(TipoUsuario tipoUsuario) {
+        String msg = null;
+        try {
+            String sql = "UPDATE `tipo_usuario` SET `nome`= ? "
+                    + "WHERE id_usuario = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, tipoUsuario.getNome());
+            ps.setString(2, tipoUsuario.getUsuario().getId());
+            ps.executeUpdate();
+            return msg = "OK";
+        } catch (SQLException e) {
+            System.out.println("ERRO atualizar tu " + e.getMessage());
         } finally {
             TratamentoConexao.fecharConexao(con);
         }

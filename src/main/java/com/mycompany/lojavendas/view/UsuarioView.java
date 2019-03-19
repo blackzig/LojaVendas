@@ -5,6 +5,7 @@
  */
 package com.mycompany.lojavendas.view;
 
+import com.mycompany.lojavendas.conf.Estatico;
 import com.mycompany.lojavendas.controller.TipoUsuarioController;
 import com.mycompany.lojavendas.controller.UsuarioController;
 import com.mycompany.lojavendas.model.TipoUsuario;
@@ -64,6 +65,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         JTable = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         JBRefresh = new javax.swing.JButton();
+        JBNovo = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -156,6 +158,15 @@ public class UsuarioView extends javax.swing.JInternalFrame {
             }
         });
 
+        JBNovo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        JBNovo.setText("Novo");
+        JBNovo.setToolTipText("Registrar novo usuário");
+        JBNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBNovoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -177,7 +188,9 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                                         .addComponent(JCBInativo))))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(JBSalvar)))
+                                .addComponent(JBSalvar)
+                                .addGap(18, 18, 18)
+                                .addComponent(JBNovo)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,7 +222,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(JTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JBBuscar))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -230,9 +243,11 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                             .addComponent(JCBAtivo)
                             .addComponent(JCBInativo))
                         .addGap(18, 18, 18)
-                        .addComponent(JBSalvar)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(JBSalvar)
+                            .addComponent(JBNovo))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
@@ -248,7 +263,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         String tipoUsuario = JCTipoUsuario.getSelectedItem().toString();
 
         if (login.equalsIgnoreCase("") || senha.equalsIgnoreCase("")) {
-           JanelaMensagem.preecherTodosOsCampos();
+            JanelaMensagem.preecherTodosOsCampos();
         } else {
             Usuario u = new Usuario();
             u.setLogin(login);
@@ -305,19 +320,20 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         }
 
         if (coluna == 4) {
-            Usuario u = new Usuario();
-            u.setLogin(login);
-
-            TipoUsuario tu = new TipoUsuario();
-            tu.setNome(tipoUsuario);
-            tu.setUsuario(u);
-
-            TipoUsuarioController tc = new TipoUsuarioController();
-            TipoUsuario tipo = tc.idTipoUsuario(tu);
-            int itsOK = tc.remover(tipo.getId());
-            if (itsOK == 0) {
-                JBBuscarActionPerformed(null);
-            }
+            JanelaMensagem.naoRemoverTipoUsuario();
+//            Usuario u = new Usuario();
+//            u.setLogin(login);
+//
+//            TipoUsuario tu = new TipoUsuario();
+//            tu.setNome(tipoUsuario);
+//            tu.setUsuario(u);
+//
+//            TipoUsuarioController tc = new TipoUsuarioController();
+//            TipoUsuario tipo = tc.idTipoUsuario(tu);
+//            int itsOK = tc.remover(tipo.getId());
+//            if (itsOK == 0) {
+//                JBBuscarActionPerformed(null);
+//            }
         }
     }//GEN-LAST:event_JTableMouseClicked
 
@@ -325,6 +341,15 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         JCTipoUsuario.removeAllItems();
         carregarListaTipoUsuario();
     }//GEN-LAST:event_JBRefreshActionPerformed
+
+    private void JBNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBNovoActionPerformed
+        JTFLogin.setText("");
+        JPFSenha.setText("");
+        JTFPesquisa.setText("");
+        editando = 0;
+        JBRefreshActionPerformed(null);
+        JanelaMensagem.novoUsuario();
+    }//GEN-LAST:event_JBNovoActionPerformed
 
     private void carregarTabela(List<TipoUsuario> lista) {
         DefaultTableModel modelo = (DefaultTableModel) JTable.getModel();
@@ -343,13 +368,36 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                     status = "Inativo";
                 }
 
-                modelo.addRow(new Object[]{
-                    lista.get(i).getUsuario().getId(),
-                    lista.get(i).getUsuario().getLogin(),
-                    lista.get(i).getNome(),
-                    status, "REMOVER"});
-            }
+                if (Estatico.getTipoUsuario().equalsIgnoreCase("TI")) {
+                    carregarTabelaDeUsuarios(modelo, lista, i, status);
+                } else {
+                    boolean itsOk = Estatico.getLogin().startsWith("teste");
+                    if (itsOk) {
+                        //true usuário teste do T.I
+                        if (!lista.get(i).getNome().equalsIgnoreCase("TI")) {
+                            carregarTabelaDeUsuarios(modelo, lista, i, status);
+                        }
+                    } else {
+                        //false usuário comum
+                        boolean itsOkAux = lista.get(i).getUsuario()
+                                .getLogin().startsWith("teste");
+                        if (!lista.get(i).getNome().equalsIgnoreCase("TI")
+                                && itsOkAux == false) {
+                            carregarTabelaDeUsuarios(modelo, lista, i, status);
+                        }
+                    }
+                }
+            }//for
         }
+    }
+
+    private void carregarTabelaDeUsuarios(DefaultTableModel modelo,
+            List<TipoUsuario> lista, int i, String status) {
+        modelo.addRow(new Object[]{
+            lista.get(i).getUsuario().getId(),
+            lista.get(i).getUsuario().getLogin(),
+            lista.get(i).getNome(),
+            status, "REMOVER"});
     }
 
     private void carregarListaTipoUsuario() {
@@ -364,6 +412,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BGAtivoInativo;
     private javax.swing.JButton JBBuscar;
+    private javax.swing.JButton JBNovo;
     private javax.swing.JButton JBRefresh;
     private javax.swing.JButton JBSalvar;
     private javax.swing.JCheckBox JCBAtivo;
