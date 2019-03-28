@@ -5,8 +5,25 @@
  */
 package com.mycompany.lojavendas.view;
 
+import com.mycompany.lojavendas.conf.Estatico;
+import com.mycompany.lojavendas.controller.ClienteController;
+import com.mycompany.lojavendas.model.Cliente;
+import com.mycompany.lojavendas.tools.CameraFoto;
+import com.mycompany.lojavendas.tools.JanelaMensagem;
+import com.mycompany.lojavendas.tools.TableCellRendererColor;
+import com.mycompany.lojavendas.tools.TrabalhandoComDatas;
 import com.mycompany.lojavendas.tools.TrabalhandoComImagens;
+import java.awt.HeadlessException;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,11 +33,18 @@ public class ClienteView extends javax.swing.JInternalFrame {
 
     JMenuItem menuCliente;
 
+    int editando = 0;
+
+    String idCliente;
+
     public ClienteView(JMenuItem menuCliente) {
         initComponents();
         this.menuCliente = menuCliente;
 
         imagemPadraoCliente();
+        JTable.getTableHeader().setReorderingAllowed(false);
+        JTable.setAutoCreateRowSorter(true);
+        JTable.setDefaultRenderer(Object.class, new TableCellRendererColor());
     }
 
     /**
@@ -39,11 +63,13 @@ public class ClienteView extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         JTFNascimento = new javax.swing.JFormattedTextField();
         JLFoto = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        JBSalvar = new javax.swing.JButton();
         JBBusca = new javax.swing.JButton();
         JTFPesquisa = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         JTable = new javax.swing.JTable();
+        JBNovo = new javax.swing.JButton();
+        JBCamera = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -80,13 +106,41 @@ public class ClienteView extends javax.swing.JInternalFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        JTFNascimento.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                JTFNascimentoFocusLost(evt);
+            }
+        });
 
         JLFoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/semImagem.png"))); // NOI18N
+        JLFoto.setToolTipText("Clique aqui para mudar a imagem");
+        JLFoto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JLFotoMouseClicked(evt);
+            }
+        });
 
-        jButton1.setText("Salvar");
+        JBSalvar.setText("Salvar");
+        JBSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBSalvarActionPerformed(evt);
+            }
+        });
 
         JBBusca.setText("Buscar");
+        JBBusca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBBuscaActionPerformed(evt);
+            }
+        });
 
+        JTFPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                JTFPesquisaKeyPressed(evt);
+            }
+        });
+
+        JTable.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         JTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -103,7 +157,26 @@ public class ClienteView extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        JTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(JTable);
+
+        JBNovo.setText("Novo");
+        JBNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBNovoActionPerformed(evt);
+            }
+        });
+
+        JBCamera.setText("Camera");
+        JBCamera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBCameraActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,7 +192,11 @@ public class ClienteView extends javax.swing.JInternalFrame {
                             .addComponent(JTFNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
                             .addComponent(JTFCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(JBSalvar)
+                                .addGap(18, 18, 18)
+                                .addComponent(JBNovo))
+                            .addComponent(JBCamera))
                         .addGap(18, 18, 18)
                         .addComponent(JLFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(JTFNome))
@@ -158,11 +235,15 @@ public class ClienteView extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(JTFNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton1))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(JBSalvar)
+                                    .addComponent(JBNovo))
+                                .addGap(18, 18, 18)
+                                .addComponent(JBCamera))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(22, 22, 22)
                                 .addComponent(JLFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
@@ -172,20 +253,166 @@ public class ClienteView extends javax.swing.JInternalFrame {
         menuCliente.setEnabled(true);
     }//GEN-LAST:event_formInternalFrameClosing
 
+    private void JLFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLFotoMouseClicked
+        try {
+            JFileChooser dialogo = TrabalhandoComImagens.arquivoDeImagem();
+            int resposta = dialogo.showOpenDialog(this);
+            if (resposta == JFileChooser.APPROVE_OPTION) {
+                File arquivo = dialogo.getSelectedFile();
+                String cpf = JTFCpf.getText();
+                if (!cpf.equalsIgnoreCase("")) {
+                    TrabalhandoComImagens.moverArquivo(arquivo, cpf);
+                }
+                JLFoto.setIcon(TrabalhandoComImagens
+                        .retornaIconeRedimensionado(arquivo));
+            }
+        } catch (HeadlessException e) {
+            System.out.println("JLFotoMouseClicked " + e.getMessage());
+        }
+    }//GEN-LAST:event_JLFotoMouseClicked
+
+    private void JBSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBSalvarActionPerformed
+        String nome = JTFNome.getText();
+        String cpf = JTFCpf.getText();
+        String nascimento = JTFNascimento.getText();
+
+        Cliente c = new Cliente();
+        c.setNome(nome);
+        c.setCpf(cpf);
+        //expressões regulares java
+        //https://stackoverflow.com/questions/26577685/java-check-if-a-string-contains-intint/26577787#26577787
+        if (nascimento.matches(".*\\d+.*")) {
+            c.setNascimento(
+                    TrabalhandoComDatas.formatBRToDateEUA(nascimento));
+        }
+        if (editando == 0) {
+            ClienteController.salvarCliente(c);
+        } else {
+            c.setId(idCliente);
+            ClienteController.atualizarCliente(c);
+            editando = 0;
+        }
+
+        imagemCliente(cpf);
+
+        JBBuscaActionPerformed(null);
+    }//GEN-LAST:event_JBSalvarActionPerformed
+
+    private void JTFNascimentoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_JTFNascimentoFocusLost
+        String nascimento = JTFNascimento.getText();
+        if (!nascimento.equals("  /  /    ")) {
+            boolean itsOk = TrabalhandoComDatas.validarData(nascimento);
+            if (itsOk == false) {
+                JTFNascimento.setText("");
+            }
+        }
+    }//GEN-LAST:event_JTFNascimentoFocusLost
+
+    private void JBBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBBuscaActionPerformed
+        String busca = JTFPesquisa.getText();
+        ClienteController tuc = new ClienteController();
+        List<Cliente> lista = tuc.listaDeClientes(busca);
+        carregarTabelaCliente(lista);
+    }//GEN-LAST:event_JBBuscaActionPerformed
+
+    private void JTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableMouseClicked
+        editando = 1;
+        int linha = JTable.getSelectedRow();
+        idCliente = (String) JTable.getValueAt(linha, 0);
+        String nome = (String) JTable.getValueAt(linha, 1);
+        String cpf = (String) JTable.getValueAt(linha, 2);
+        String nascimento = (String) JTable.getValueAt(linha, 3);
+
+        JTFNome.setText(nome);
+        JTFCpf.setText(cpf);
+        JTFNascimento.setText(nascimento);
+        Estatico.setCpfCamera(cpf);
+
+        imagemCliente(cpf);
+    }//GEN-LAST:event_JTableMouseClicked
+
+    private void JBNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBNovoActionPerformed
+        JTFNome.setText("");
+        JTFCpf.setText("");
+        JTFNascimento.setText("");
+        editando = 0;
+    }//GEN-LAST:event_JBNovoActionPerformed
+
+    private void JTFPesquisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JTFPesquisaKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            JBBuscaActionPerformed(null);
+        }
+    }//GEN-LAST:event_JTFPesquisaKeyPressed
+
+    private void JBCameraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCameraActionPerformed
+        try {
+            new CameraFoto();
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteView.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_JBCameraActionPerformed
+
+    private void imagemCliente(String cpf) {
+        if (!cpf.equalsIgnoreCase("")) {
+            boolean imagemExiste = TrabalhandoComImagens
+                    .imagemDoCliente(cpf);
+            System.out.println("imagemExiste " + imagemExiste);
+            if (imagemExiste) {
+                TrabalhandoComImagens tci = new TrabalhandoComImagens();
+                Icon icon = tci.imagem(cpf);
+                JLFoto.setIcon(icon);
+            } else {
+                imagemPadraoCliente();
+            }
+        } else {
+            imagemPadraoCliente();
+        }
+    }
+
     private void imagemPadraoCliente() {
         TrabalhandoComImagens tci = new TrabalhandoComImagens();
         JLFoto.setIcon(tci.imagemPadrao());
     }
 
+    private void carregarTabelaCliente(List<Cliente> lista) {
+        DefaultTableModel modelo = (DefaultTableModel) JTable.getModel();
+        modelo.setRowCount(0);
+        JTable.getColumnModel().getColumn(0).setMinWidth(0);
+        JTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        JTable.getColumnModel().getColumn(1).setPreferredWidth(300);
+        JTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        JTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+
+        if (lista.isEmpty()) {
+            JanelaMensagem.nadaNaLista();
+        } else {
+            lista.forEach((c) -> {
+                String nascimento = "";
+                if (c.getNascimento() != null) {
+                    nascimento = TrabalhandoComDatas
+                            .fixDateFromBD(c.getNascimento());
+                }
+                modelo.addRow(new Object[]{
+                    c.getId(),
+                    c.getNome(),
+                    c.getCpf(),
+                    nascimento});
+            });
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JBBusca;
+    private javax.swing.JButton JBCamera;
+    private javax.swing.JButton JBNovo;
+    private javax.swing.JButton JBSalvar;
     private javax.swing.JLabel JLFoto;
     private javax.swing.JTextField JTFCpf;
     private javax.swing.JFormattedTextField JTFNascimento;
     private javax.swing.JTextField JTFNome;
     private javax.swing.JTextField JTFPesquisa;
     private javax.swing.JTable JTable;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

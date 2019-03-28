@@ -78,4 +78,16 @@ public class JanelaMensagem {
                 "Pronto para inserir um novo usuário.",
                 "Aviso", 1);
     }
+
+    public static void dataInvalida() {
+        JOptionPane.showMessageDialog(null,
+                "Digite uma data válida.",
+                "Aviso", 1);
+    }
+
+    public static void digiteONome() {
+        JOptionPane.showMessageDialog(null,
+                "Digite o nome.",
+                "Aviso", 1);
+    }
 }

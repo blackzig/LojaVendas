@@ -5,6 +5,7 @@
  */
 package com.mycompany.lojavendas.tools;
 
+import com.mycompany.lojavendas.conf.Estatico;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -50,13 +51,9 @@ public class TrabalhandoComImagens {
         return icon;
     }
 
-    public static boolean imagemDoAlunoMatricula(int matricula) {
-        boolean icon = false;
-        File f = new File(FOTOS + matricula + ".jpg");
-        if (f.exists() && !f.isDirectory()) {
-            icon = true;
-        }
-        return icon;
+    public boolean imagemExiste(String cpf) {
+        File f = new File(FOTOS + cpf + ".jpg");
+        return f.exists() && !f.isDirectory();
     }
 
     public static Icon retornaIconeRedimensionado(File newName) {
@@ -66,12 +63,12 @@ public class TrabalhandoComImagens {
         return icon;
     }
 
-    public static String moverArquivo(File arquivo) {
+    public static String moverArquivo(File arquivo, String cpf) {
         String uuid = null;
         try {
-            UUID idOne = UUID.randomUUID();
-            uuid = idOne.toString();
-            File dest = new File(FOTOS + uuid + ".jpg");
+//            UUID idOne = UUID.randomUUID();
+//            uuid = idOne.toString();
+            File dest = new File(FOTOS + cpf + ".jpg");
             Files.copy(arquivo.toPath(), dest.toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
@@ -100,20 +97,32 @@ public class TrabalhandoComImagens {
         return icon;
     }
 
-    public Icon imagem(String uuid) {
-        File newName = new File(FOTOS + uuid + ".jpg");
+    public Icon imagem(String cpf) {
+        File newName = new File(FOTOS + cpf + ".jpg");
         Icon icon = TrabalhandoComImagens.retornaIconeRedimensionado(newName);
         return icon;
     }
 
-    public Icon existeImagemUUID(String uuid) {
+    public Icon existeImagemCPF(String cpf) {
         Icon icon = null;
-        File f = new File(FOTOS + uuid + ".jpg");
+        File f = new File(FOTOS + cpf + ".jpg");
         if (f.exists() && !f.isDirectory()) {
-            icon = new ImageIcon(FOTOS + uuid + ".jpg");
+            TrabalhandoComImagens
+                    .retornaIconeRedimensionado(f);
+            icon = new ImageIcon(FOTOS + cpf + ".jpg");
         } else {
             icon = imagemPadrao();
         }
+        return icon;
+    }
+
+    public static boolean imagemDoCliente(String cpf) {
+        boolean icon = false;
+        File f = new File(FOTOS + cpf + ".jpg");
+        if (f.exists() && !f.isDirectory()) {
+            icon = true;
+        }
+        System.out.println("icon " + icon);
         return icon;
     }
 }

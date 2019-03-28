@@ -13,7 +13,16 @@ public class Estatico {
 
     private static String tipoUsuario;
     private static String login;
+    public static String cpfCamera;
     //private static List<String> tipoUsuario;
+
+    public static String getCpfCamera() {
+        return cpfCamera;
+    }
+
+    public static void setCpfCamera(String cpfCamera) {
+        Estatico.cpfCamera = cpfCamera;
+    }
 
     public static String getTipoUsuario() {
         return tipoUsuario;
