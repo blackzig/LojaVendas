@@ -13,6 +13,7 @@ import com.mycompany.lojavendas.tools.JanelaMensagem;
 import com.mycompany.lojavendas.tools.TableCellRendererColor;
 import com.mycompany.lojavendas.tools.TrabalhandoComDatas;
 import com.mycompany.lojavendas.tools.TrabalhandoComImagens;
+import com.mycompany.lojavendas.tools.UseRowsKeyBoard;
 import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,12 +32,15 @@ import javax.swing.table.DefaultTableModel;
  * @author Michel
  */
 public class ClienteView extends javax.swing.JInternalFrame {
+//https://toedter.com/jcalendar/
 
     JMenuItem menuCliente;
 
     int editando = 0;
 
     String idCliente;
+
+    List<Cliente> lista = null;
 
     public ClienteView(JMenuItem menuCliente) {
         initComponents();
@@ -70,6 +75,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         JTable = new javax.swing.JTable();
         JBNovo = new javax.swing.JButton();
         JBCamera = new javax.swing.JButton();
+        JDCNascimento = new com.toedter.calendar.JDateChooser();
 
         setClosable(true);
         setIconifiable(true);
@@ -162,6 +168,11 @@ public class ClienteView extends javax.swing.JInternalFrame {
                 JTableMouseClicked(evt);
             }
         });
+        JTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                JTableKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(JTable);
 
         JBNovo.setText("Novo");
@@ -188,15 +199,20 @@ public class ClienteView extends javax.swing.JInternalFrame {
                     .addComponent(jLabel4)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(JTFNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(JTFCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(JBSalvar)
-                                .addGap(18, 18, 18)
-                                .addComponent(JBNovo))
-                            .addComponent(JBCamera))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(JBNovo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(JBCamera))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(JTFNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(JTFCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(JDCNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addComponent(JLFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(JTFNome))
@@ -235,15 +251,16 @@ public class ClienteView extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(JTFNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
+                                .addComponent(JDCNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(62, 62, 62)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(JBSalvar)
-                                    .addComponent(JBNovo))
-                                .addGap(18, 18, 18)
-                                .addComponent(JBCamera))
+                                    .addComponent(JBNovo)
+                                    .addComponent(JBCamera)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(22, 22, 22)
                                 .addComponent(JLFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();
@@ -281,10 +298,20 @@ public class ClienteView extends javax.swing.JInternalFrame {
         c.setCpf(cpf);
         //expressões regulares java
         //https://stackoverflow.com/questions/26577685/java-check-if-a-string-contains-intint/26577787#26577787
-        if (nascimento.matches(".*\\d+.*")) {
+//        if (nascimento.matches(".*\\d+.*")) {
+//            c.setNascimento(
+//                    TrabalhandoComDatas.formatBRToDateEUA(nascimento));
+//        }
+
+        try {
+            String nascimento1 = ((JTextField) JDCNascimento
+                    .getDateEditor().getUiComponent()).getText();
             c.setNascimento(
-                    TrabalhandoComDatas.formatBRToDateEUA(nascimento));
+                    TrabalhandoComDatas.formatBRToDateEUA(nascimento1));
+        } catch (Exception e) {
+            System.out.println("Erro " + e.getMessage());
         }
+
         if (editando == 0) {
             ClienteController.salvarCliente(c);
         } else {
@@ -311,24 +338,13 @@ public class ClienteView extends javax.swing.JInternalFrame {
     private void JBBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBBuscaActionPerformed
         String busca = JTFPesquisa.getText();
         ClienteController tuc = new ClienteController();
-        List<Cliente> lista = tuc.listaDeClientes(busca);
-        carregarTabelaCliente(lista);
+        lista = tuc.listaDeClientes(busca);
+        carregarTabelaCliente();
     }//GEN-LAST:event_JBBuscaActionPerformed
 
     private void JTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableMouseClicked
-        editando = 1;
         int linha = JTable.getSelectedRow();
-        idCliente = (String) JTable.getValueAt(linha, 0);
-        String nome = (String) JTable.getValueAt(linha, 1);
-        String cpf = (String) JTable.getValueAt(linha, 2);
-        String nascimento = (String) JTable.getValueAt(linha, 3);
-
-        JTFNome.setText(nome);
-        JTFCpf.setText(cpf);
-        JTFNascimento.setText(nascimento);
-        Estatico.setCpfCamera(cpf);
-
-        imagemCliente(cpf);
+        trocaDeClienteComTeclado(linha);
     }//GEN-LAST:event_JTableMouseClicked
 
     private void JBNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBNovoActionPerformed
@@ -339,9 +355,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_JBNovoActionPerformed
 
     private void JTFPesquisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JTFPesquisaKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            JBBuscaActionPerformed(null);
-        }
+
     }//GEN-LAST:event_JTFPesquisaKeyPressed
 
     private void JBCameraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCameraActionPerformed
@@ -353,11 +367,32 @@ public class ClienteView extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_JBCameraActionPerformed
 
+    private void JTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JTableKeyPressed
+        int linha = UseRowsKeyBoard.useRows(JTable, evt, lista);
+        trocaDeClienteComTeclado(linha);
+    }//GEN-LAST:event_JTableKeyPressed
+
+    private void trocaDeClienteComTeclado(int linha) {
+        editando = 1;
+        idCliente = (String) JTable.getValueAt(linha, 0);
+        String nome = (String) JTable.getValueAt(linha, 1);
+        String cpf = (String) JTable.getValueAt(linha, 2);
+        String nascimento = (String) JTable.getValueAt(linha, 3);
+
+        JTFNome.setText(nome);
+        JTFCpf.setText(cpf);
+        // JTFNascimento.setText(nascimento);
+        ((JTextField) JDCNascimento
+                .getDateEditor().getUiComponent()).setText(nascimento);
+        Estatico.setCpfCamera(cpf);
+
+        imagemCliente(cpf);
+    }
+
     private void imagemCliente(String cpf) {
         if (!cpf.equalsIgnoreCase("")) {
             boolean imagemExiste = TrabalhandoComImagens
                     .imagemDoCliente(cpf);
-            System.out.println("imagemExiste " + imagemExiste);
             if (imagemExiste) {
                 TrabalhandoComImagens tci = new TrabalhandoComImagens();
                 Icon icon = tci.imagem(cpf);
@@ -375,7 +410,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         JLFoto.setIcon(tci.imagemPadrao());
     }
 
-    private void carregarTabelaCliente(List<Cliente> lista) {
+    private void carregarTabelaCliente() {
         DefaultTableModel modelo = (DefaultTableModel) JTable.getModel();
         modelo.setRowCount(0);
         JTable.getColumnModel().getColumn(0).setMinWidth(0);
@@ -407,6 +442,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
     private javax.swing.JButton JBCamera;
     private javax.swing.JButton JBNovo;
     private javax.swing.JButton JBSalvar;
+    private com.toedter.calendar.JDateChooser JDCNascimento;
     private javax.swing.JLabel JLFoto;
     private javax.swing.JTextField JTFCpf;
     private javax.swing.JFormattedTextField JTFNascimento;

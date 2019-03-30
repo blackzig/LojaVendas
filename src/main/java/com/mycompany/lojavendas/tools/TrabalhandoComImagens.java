@@ -5,7 +5,6 @@
  */
 package com.mycompany.lojavendas.tools;
 
-import com.mycompany.lojavendas.conf.Estatico;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -122,7 +120,6 @@ public class TrabalhandoComImagens {
         if (f.exists() && !f.isDirectory()) {
             icon = true;
         }
-        System.out.println("icon " + icon);
         return icon;
     }
 }
