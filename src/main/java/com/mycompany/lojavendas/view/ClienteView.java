@@ -11,6 +11,7 @@ import com.mycompany.lojavendas.model.Cliente;
 import com.mycompany.lojavendas.tools.CameraFoto;
 import com.mycompany.lojavendas.tools.JanelaMensagem;
 import com.mycompany.lojavendas.tools.TableCellRendererColor;
+import com.mycompany.lojavendas.tools.TableCellSelectedColor;
 import com.mycompany.lojavendas.tools.TrabalhandoComDatas;
 import com.mycompany.lojavendas.tools.TrabalhandoComImagens;
 import com.mycompany.lojavendas.tools.UseRowsKeyBoard;
@@ -49,7 +50,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         imagemPadraoCliente();
         JTable.getTableHeader().setReorderingAllowed(false);
         JTable.setAutoCreateRowSorter(true);
-        JTable.setDefaultRenderer(Object.class, new TableCellRendererColor());
+        JTable.setDefaultRenderer(Object.class, new TableCellSelectedColor());
     }
 
     /**
@@ -152,11 +153,11 @@ public class ClienteView extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "Nome", "CPF", "Nascimento"
+                "ID", "Nome", "CPF", "Nascimento", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -343,7 +344,17 @@ public class ClienteView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_JBBuscaActionPerformed
 
     private void JTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableMouseClicked
+        editando = 1;
         int linha = JTable.getSelectedRow();
+        String status = (String) JTable.getValueAt(linha, 4);
+
+        if (evt.getClickCount() >= 2) {
+            System.out.println("status " + status);
+            if (status == null) {
+                lista.get(linha).setStatus("REMOVA");
+                carregarTabelaCliente();
+            }
+        }
         trocaDeClienteComTeclado(linha);
     }//GEN-LAST:event_JTableMouseClicked
 
@@ -355,7 +366,9 @@ public class ClienteView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_JBNovoActionPerformed
 
     private void JTFPesquisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JTFPesquisaKeyPressed
-
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            JBBuscaActionPerformed(null);
+        }
     }//GEN-LAST:event_JTFPesquisaKeyPressed
 
     private void JBCameraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCameraActionPerformed
@@ -373,7 +386,6 @@ public class ClienteView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_JTableKeyPressed
 
     private void trocaDeClienteComTeclado(int linha) {
-        editando = 1;
         idCliente = (String) JTable.getValueAt(linha, 0);
         String nome = (String) JTable.getValueAt(linha, 1);
         String cpf = (String) JTable.getValueAt(linha, 2);
@@ -418,6 +430,9 @@ public class ClienteView extends javax.swing.JInternalFrame {
         JTable.getColumnModel().getColumn(1).setPreferredWidth(300);
         JTable.getColumnModel().getColumn(2).setPreferredWidth(100);
         JTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+        JTable.getColumnModel().getColumn(4).setPreferredWidth(100);
+        //JTable.getColumnModel().getColumn(4).setMinWidth(0);
+        // JTable.getColumnModel().getColumn(4).setMaxWidth(0);
 
         if (lista.isEmpty()) {
             JanelaMensagem.nadaNaLista();
@@ -432,7 +447,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
                     c.getId(),
                     c.getNome(),
                     c.getCpf(),
-                    nascimento});
+                    nascimento, c.getStatus()});
             });
         }
     }

@@ -17,6 +17,15 @@ public class Cliente {
     private String nome;
     private String cpf;
     private Date nascimento;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;
