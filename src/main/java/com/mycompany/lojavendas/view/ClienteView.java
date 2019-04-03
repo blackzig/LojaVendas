@@ -19,6 +19,7 @@ import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +43,8 @@ public class ClienteView extends javax.swing.JInternalFrame {
     String idCliente;
 
     List<Cliente> lista = null;
+    List<String> listaSTR = new ArrayList<>();
+    List<String> listaSTRAux = new ArrayList<>();
 
     public ClienteView(JMenuItem menuCliente) {
         initComponents();
@@ -77,6 +80,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         JBNovo = new javax.swing.JButton();
         JBCamera = new javax.swing.JButton();
         JDCNascimento = new com.toedter.calendar.JDateChooser();
+        JBRemover = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -190,6 +194,13 @@ public class ClienteView extends javax.swing.JInternalFrame {
             }
         });
 
+        JBRemover.setText("Remover");
+        JBRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBRemoverActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -222,7 +233,9 @@ public class ClienteView extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(JBBusca)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(JTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(JBRemover))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -234,7 +247,8 @@ public class ClienteView extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(JTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(JBBusca))
+                            .addComponent(JBBusca)
+                            .addComponent(JBRemover))
                         .addGap(9, 9, 9)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -261,7 +275,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(22, 22, 22)
                                 .addComponent(JLFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -346,14 +360,23 @@ public class ClienteView extends javax.swing.JInternalFrame {
     private void JTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableMouseClicked
         editando = 1;
         int linha = JTable.getSelectedRow();
+        String idCliente = (String) JTable.getValueAt(linha, 0);
         String status = (String) JTable.getValueAt(linha, 4);
 
         if (evt.getClickCount() >= 2) {
-            System.out.println("status " + status);
             if (status == null) {
                 lista.get(linha).setStatus("REMOVA");
-                carregarTabelaCliente();
+                listaSTRAux.add(idCliente);
+                listaSTR.add(idCliente);
+            } else {
+                lista.get(linha).setStatus(null);
+                listaSTRAux.forEach((a) -> {
+                    if (idCliente.equalsIgnoreCase(a)) {
+                        listaSTR.remove(a);
+                    }
+                });
             }
+            carregarTabelaCliente();
         }
         trocaDeClienteComTeclado(linha);
     }//GEN-LAST:event_JTableMouseClicked
@@ -384,6 +407,14 @@ public class ClienteView extends javax.swing.JInternalFrame {
         int linha = UseRowsKeyBoard.useRows(JTable, evt, lista);
         trocaDeClienteComTeclado(linha);
     }//GEN-LAST:event_JTableKeyPressed
+
+    private void JBRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBRemoverActionPerformed
+        listaSTR.forEach((a) -> {
+            System.out.println("id " + a);
+        });
+        listaSTRAux.clear();
+        listaSTR.clear();
+    }//GEN-LAST:event_JBRemoverActionPerformed
 
     private void trocaDeClienteComTeclado(int linha) {
         idCliente = (String) JTable.getValueAt(linha, 0);
@@ -456,6 +487,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
     private javax.swing.JButton JBBusca;
     private javax.swing.JButton JBCamera;
     private javax.swing.JButton JBNovo;
+    private javax.swing.JButton JBRemover;
     private javax.swing.JButton JBSalvar;
     private com.toedter.calendar.JDateChooser JDCNascimento;
     private javax.swing.JLabel JLFoto;

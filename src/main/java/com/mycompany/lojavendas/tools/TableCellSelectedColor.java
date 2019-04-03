@@ -29,15 +29,23 @@ public class TableCellSelectedColor extends DefaultTableCellRenderer {
                 table, value, isSelected, hasFocus, row, column);
         componente.setHorizontalAlignment(CENTER);
 
-        componente.setForeground(Color.white);
-        if (row % 2 == 0) {
-            componente.setBackground(Color.BLACK);
+        if (value != null) {
+            switch (value.toString()) {
+                case "michel":
+                    setBackground(Color.green);
+                    componente.setForeground(Color.black);
+                    break;
+                case "medeiros":
+                    setBackground(Color.white);
+                    componente.setForeground(Color.black);
+                    break;
+                default:
+                    zebrar(row, isSelected);
+            }
         } else {
-            componente.setBackground(Color.blue);
+            zebrar(row, isSelected);
         }
-        if (isSelected) {
-            componente.setBackground(Color.orange);
-        }
+
         try {
             if (table.getValueAt(row, 4).equals("REMOVA")) {
                 componente.setBackground(Color.red);
@@ -47,6 +55,18 @@ public class TableCellSelectedColor extends DefaultTableCellRenderer {
         }
 
         return componente;
+    }
+
+    private void zebrar(int row, boolean isSelected) {
+        componente.setForeground(Color.white);
+        if (row % 2 == 0) {
+            componente.setBackground(Color.BLACK);
+        } else {
+            componente.setBackground(Color.blue);
+        }
+        if (isSelected) {
+            componente.setBackground(Color.orange);
+        }
     }
 
 }
