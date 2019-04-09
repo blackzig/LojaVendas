@@ -30,4 +30,17 @@ public class Conexao {
         return con;
     }
 
+    public static Connection conectarTest() {
+        try {
+            con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost/test",
+                    "root",
+                    ""
+            );
+        } catch (SQLException e) {
+            System.out.println("ERROR conectarTest " + e.getMessage());
+        }
+        return con;
+    }
+
 }
