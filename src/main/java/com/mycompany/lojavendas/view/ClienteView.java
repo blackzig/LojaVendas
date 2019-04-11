@@ -28,6 +28,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import relatorio.Dynamic;
 import relatorio.Relatorio;
 
 /**
@@ -84,6 +85,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         JBRemover = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -218,6 +220,13 @@ public class ClienteView extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton3.setText("Relatório 3");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -259,7 +268,9 @@ public class ClienteView extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -301,7 +312,8 @@ public class ClienteView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -459,6 +471,10 @@ public class ClienteView extends javax.swing.JInternalFrame {
         r.relatorioCompras2(dataInicial, dataFinal);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        new Dynamic();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     private void trocaDeClienteComTeclado(int linha) {
         idCliente = (String) JTable.getValueAt(linha, 0);
         String nome = (String) JTable.getValueAt(linha, 1);
@@ -541,6 +557,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
     private javax.swing.JTable JTable;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
