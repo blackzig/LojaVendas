@@ -136,4 +136,13 @@ public class TrabalhandoComDatas {
         String reportDate = df.format(date);
         return reportDate;
     }
+
+    public static String dataHoje() {
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofPattern("dd-MM-yyyy");
+        String formattedString = localDate.format(formatter);
+        return formattedString;
+    }
+
 }

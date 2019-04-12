@@ -8,9 +8,9 @@ package com.mycompany.lojavendas.view;
 import com.mycompany.lojavendas.conf.Estatico;
 import com.mycompany.lojavendas.controller.ClienteController;
 import com.mycompany.lojavendas.model.Cliente;
+import com.mycompany.lojavendas.tools.BackupBD;
 import com.mycompany.lojavendas.tools.CameraFoto;
 import com.mycompany.lojavendas.tools.JanelaMensagem;
-import com.mycompany.lojavendas.tools.TableCellRendererColor;
 import com.mycompany.lojavendas.tools.TableCellSelectedColor;
 import com.mycompany.lojavendas.tools.TrabalhandoComDatas;
 import com.mycompany.lojavendas.tools.TrabalhandoComImagens;
@@ -86,6 +86,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        JBBackup = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -227,6 +228,13 @@ public class ClienteView extends javax.swing.JInternalFrame {
             }
         });
 
+        JBBackup.setText("Backup");
+        JBBackup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBBackupActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -270,7 +278,9 @@ public class ClienteView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)))
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(JBBackup)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -313,7 +323,8 @@ public class ClienteView extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(JBBackup))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -475,6 +486,10 @@ public class ClienteView extends javax.swing.JInternalFrame {
         new Dynamic();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void JBBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBBackupActionPerformed
+        BackupBD.executarBackupBat();
+    }//GEN-LAST:event_JBBackupActionPerformed
+
     private void trocaDeClienteComTeclado(int linha) {
         idCliente = (String) JTable.getValueAt(linha, 0);
         String nome = (String) JTable.getValueAt(linha, 1);
@@ -543,6 +558,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JBBackup;
     private javax.swing.JButton JBBusca;
     private javax.swing.JButton JBCamera;
     private javax.swing.JButton JBNovo;
