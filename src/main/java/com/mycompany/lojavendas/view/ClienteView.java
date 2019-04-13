@@ -7,6 +7,7 @@ package com.mycompany.lojavendas.view;
 
 import com.mycompany.lojavendas.conf.Estatico;
 import com.mycompany.lojavendas.controller.ClienteController;
+import com.mycompany.lojavendas.controller.ExcelController;
 import com.mycompany.lojavendas.model.Cliente;
 import com.mycompany.lojavendas.tools.BackupBD;
 import com.mycompany.lojavendas.tools.CameraFoto;
@@ -39,19 +40,19 @@ public class ClienteView extends javax.swing.JInternalFrame {
 //https://toedter.com/jcalendar/
 
     JMenuItem menuCliente;
-
+    
     int editando = 0;
-
+    
     String idCliente;
-
+    
     List<Cliente> lista = null;
     List<String> listaSTR = new ArrayList<>();
     List<String> listaSTRAux = new ArrayList<>();
-
+    
     public ClienteView(JMenuItem menuCliente) {
         initComponents();
         this.menuCliente = menuCliente;
-
+        
         imagemPadraoCliente();
         JTable.getTableHeader().setReorderingAllowed(false);
         JTable.setAutoCreateRowSorter(true);
@@ -87,6 +88,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         JBBackup = new javax.swing.JButton();
+        JBExcel = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -235,6 +237,13 @@ public class ClienteView extends javax.swing.JInternalFrame {
             }
         });
 
+        JBExcel.setText("Excel");
+        JBExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBExcelActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -271,7 +280,9 @@ public class ClienteView extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(JTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(JBRemover))
+                                .addComponent(JBRemover)
+                                .addGap(18, 18, 18)
+                                .addComponent(JBExcel))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
@@ -292,7 +303,8 @@ public class ClienteView extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(JTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JBBusca)
-                            .addComponent(JBRemover))
+                            .addComponent(JBRemover)
+                            .addComponent(JBExcel))
                         .addGap(9, 9, 9)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -325,7 +337,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
                     .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(JBBackup))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -357,7 +369,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         String nome = JTFNome.getText();
         String cpf = JTFCpf.getText();
         String nascimento = JTFNascimento.getText();
-
+        
         Cliente c = new Cliente();
         c.setNome(nome);
         c.setCpf(cpf);
@@ -376,7 +388,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         } catch (Exception e) {
             System.out.println("Erro " + e.getMessage());
         }
-
+        
         if (editando == 0) {
             ClienteController.salvarCliente(c);
         } else {
@@ -384,9 +396,9 @@ public class ClienteView extends javax.swing.JInternalFrame {
             ClienteController.atualizarCliente(c);
             editando = 0;
         }
-
+        
         imagemCliente(cpf);
-
+        
         JBBuscaActionPerformed(null);
     }//GEN-LAST:event_JBSalvarActionPerformed
 
@@ -412,7 +424,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
         int linha = JTable.getSelectedRow();
         String idCliente = (String) JTable.getValueAt(linha, 0);
         String status = (String) JTable.getValueAt(linha, 4);
-
+        
         if (evt.getClickCount() >= 2) {
             if (status == null) {
                 lista.get(linha).setStatus("REMOVA");
@@ -490,22 +502,26 @@ public class ClienteView extends javax.swing.JInternalFrame {
         BackupBD.executarBackupBat();
     }//GEN-LAST:event_JBBackupActionPerformed
 
+    private void JBExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBExcelActionPerformed
+        ExcelController.gerarExcelCliente(lista);
+    }//GEN-LAST:event_JBExcelActionPerformed
+    
     private void trocaDeClienteComTeclado(int linha) {
         idCliente = (String) JTable.getValueAt(linha, 0);
         String nome = (String) JTable.getValueAt(linha, 1);
         String cpf = (String) JTable.getValueAt(linha, 2);
         String nascimento = (String) JTable.getValueAt(linha, 3);
-
+        
         JTFNome.setText(nome);
         JTFCpf.setText(cpf);
         // JTFNascimento.setText(nascimento);
         ((JTextField) JDCNascimento
                 .getDateEditor().getUiComponent()).setText(nascimento);
         Estatico.setCpfCamera(cpf);
-
+        
         imagemCliente(cpf);
     }
-
+    
     private void imagemCliente(String cpf) {
         if (!cpf.equalsIgnoreCase("")) {
             boolean imagemExiste = TrabalhandoComImagens
@@ -521,12 +537,12 @@ public class ClienteView extends javax.swing.JInternalFrame {
             imagemPadraoCliente();
         }
     }
-
+    
     private void imagemPadraoCliente() {
         TrabalhandoComImagens tci = new TrabalhandoComImagens();
         JLFoto.setIcon(tci.imagemPadrao());
     }
-
+    
     private void carregarTabelaCliente() {
         DefaultTableModel modelo = (DefaultTableModel) JTable.getModel();
         modelo.setRowCount(0);
@@ -561,6 +577,7 @@ public class ClienteView extends javax.swing.JInternalFrame {
     private javax.swing.JButton JBBackup;
     private javax.swing.JButton JBBusca;
     private javax.swing.JButton JBCamera;
+    private javax.swing.JButton JBExcel;
     private javax.swing.JButton JBNovo;
     private javax.swing.JButton JBRemover;
     private javax.swing.JButton JBSalvar;
